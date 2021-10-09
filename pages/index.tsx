@@ -1,7 +1,11 @@
 import type { NextPage } from "next";
-
+import Navbar from "../Components/nav";
 const Home: NextPage = () => {
-  return <div></div>;
+  return (
+    <>
+      <Navbar /> <div>Hello World</div>
+    </>
+  );
 };
 
 export default Home;
