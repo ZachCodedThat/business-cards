@@ -1,8 +1,9 @@
 import { ApolloServer, gql } from "apollo-server-micro";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./lib/prisma";
 import { v4 as uuidv4 } from "uuid";
 
-const prisma = new PrismaClient();
+// 2 interfaces are created one representing the possible arguments that could be passed to one of the functions and the other
+// representing the inputs needed to add a card to the DB
 
 interface Args {
   id?: number;
@@ -27,6 +28,9 @@ interface InputArgs {
     website: string;
   };
 }
+
+// the gql declares the structure and functions of our DB with their associated types.
+// for querys and mutations you have to type both the inputs if there are any and the output of the function.
 
 const typeDefs = gql`
   type Card {
@@ -61,17 +65,20 @@ const typeDefs = gql`
   }
 `;
 
+// The resolvers are where the functions defined above get their shape.
+// there are all async functions
+
 const resolvers = {
   Query: {
     getCards: async () => {
       return prisma.card.findMany({
         take: 10,
-      });
+      }); // Pulls up to 10 cards from the DB and returns the requested criteria
     },
     getCard: async (_: null, args: Args) => {
       return prisma.card.findUnique({
         where: {
-          id: Number(args.id),
+          id: Number(args.id), // takes the "id" as a string and pulls the criteria requested for just that card.
         },
       });
     },
@@ -79,13 +86,13 @@ const resolvers = {
   Mutation: {
     addCard: async (_: null, args: InputArgs) => {
       return prisma.card.create({
-        data: { ...args.input, cardId: uuidv4() },
+        data: { ...args.input, cardId: uuidv4() }, // this takes input for a new Card plus a randomly generated cardId and creates it in the DB.
       });
     },
     deleteCard: async (_: null, args: Args) => {
       return prisma.card.delete({
         where: {
-          id: Number(args.id),
+          id: Number(args.id), // takes the "id" as a string and deletes the coorosponding card from the db
         },
       });
     },

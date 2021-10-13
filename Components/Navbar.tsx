@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import {
   Box,
   Flex,
+  Image,
   Avatar,
   HStack,
   Link,
@@ -18,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 
 import DarkModeSwitch from "./DarkModeSwitch";
+import { v4 as uuidv4 } from "uuid";
 
 const Links = ["Api"];
 
@@ -36,13 +38,24 @@ const NavLink = ({ children }: { children: ReactNode }) => (
   </Link>
 );
 
+const RandomAvatar = () => {
+  const randomNumber = uuidv4();
+  return (
+    <Image
+      src={`https://avatars.dicebear.com/api/bottts/${randomNumber}.svg`}
+      margin-top="1rem"
+      boxSize="3rem"
+      alt=""
+    />
+  );
+};
+
 export default function Navbar() {
-  const randomNumber = Math.floor(Math.random() * 100);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box bg={useColorModeValue("gray.100", "gray.900")} px={10}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack spacing={8} alignItems={"center"}>
             <Box>Logo</Box>
@@ -64,10 +77,7 @@ export default function Navbar() {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar
-                  size={"sm"}
-                  src={`https://avatars.dicebear.com/api/bottts/${randomNumber}.svg`}
-                />
+                <RandomAvatar />
               </MenuButton>
               <MenuList>
                 <MenuItem>Link 1</MenuItem>
